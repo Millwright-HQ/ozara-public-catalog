@@ -192,6 +192,10 @@ button:focus-visible,
 dialog {
   width: min(960px, calc(100vw - 24px));
   max-height: calc(100vh - 24px);
+  max-height: calc(100dvh - 24px);
+  margin: auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 0;
   color: var(--text);
   background: var(--surface);
@@ -206,15 +210,17 @@ dialog article {
   position: relative;
 }
 .close {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+  position: sticky;
+  top: 0;
+  display: block;
+  margin: -16px -16px -24px auto;
+  z-index: 1;
   width: 40px;
   height: 40px;
   font-size: 26px;
   line-height: 1;
   color: var(--text);
-  background: none;
+  background: var(--surface);
   border: 0;
   cursor: pointer;
 }
@@ -356,4 +362,9 @@ dialog article {
   .card {
     transition: border-color 0.15s;
   }
+}
+
+/* Lock the page behind an open product so only the product scrolls. */
+body:has(dialog[open]) {
+  overflow: hidden;
 }

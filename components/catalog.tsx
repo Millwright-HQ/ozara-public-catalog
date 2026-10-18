@@ -100,13 +100,12 @@ export function Catalog({ items, cdnUrl }: { items: CatalogItem[]; cdnUrl: strin
                   location.hash = p.slug;
                 }}
               >
-                <div className={`pic${p.soldOut || p.status === 'ARCHIVED' ? ' faded' : ''}`}>
+                <div className={`pic${p.soldOut ? ' faded' : ''}`}>
                   {c && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={src(c.base, 640)} alt={c.alt || p.name} loading="lazy" />
                   )}
                   {p.soldOut && <span className="badge out">Sold out</span>}
-                  {p.status === 'ARCHIVED' && <span className="badge">Discontinued</span>}
                 </div>
                 <div className="body">
                   {p.brand && <p className="brand">{p.brand}</p>}
@@ -185,7 +184,6 @@ function Detail({ p, src, onClose }: { p: CatalogItem; src: Src; onClose: () => 
             <h2 id="d-name">{p.name}</h2>
             <p className="badges">
               {p.soldOut && <span className="badge out">Sold out</span>}
-              {p.status === 'ARCHIVED' && <span className="badge">Discontinued</span>}
             </p>
             <p className="price">{priceText(p)}</p>
             <p className="desc">{p.description}</p>
@@ -217,9 +215,6 @@ function Detail({ p, src, onClose }: { p: CatalogItem; src: Src; onClose: () => 
                     <td className="sku">{v.sku}</td>
                     <td>{v.label || '–'}</td>
                     <td className="num">
-                      {v.compareAtCents !== undefined && v.compareAtCents > v.priceCents && (
-                        <s>{money(v.compareAtCents)}</s>
-                      )}
                       {money(v.priceCents)}
                     </td>
                   </tr>

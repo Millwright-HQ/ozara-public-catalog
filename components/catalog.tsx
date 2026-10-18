@@ -16,7 +16,6 @@ type Src = (base: string, w: number) => string;
 export function Catalog({ items, cdnUrl }: { items: CatalogItem[]; cdnUrl: string }) {
   const [q, setQ] = useState('');
   const [category, setCategory] = useState('');
-  const [avail, setAvail] = useState<'all' | 'in' | 'out'>('all');
   const [openSlug, setOpenSlug] = useState<string | null>(null);
 
   const src: Src = (base, w) =>
@@ -32,14 +31,12 @@ export function Catalog({ items, cdnUrl }: { items: CatalogItem[]; cdnUrl: strin
     const needle = q.trim().toLowerCase();
     return items.filter((p) => {
       if (category && !p.categories.some((c) => c.id === category)) return false;
-      if (avail === 'in' && p.soldOut) return false;
-      if (avail === 'out' && !p.soldOut) return false;
       if (!needle) return true;
       return [p.name, p.brand ?? '', ...p.variants.map((v) => v.sku)].some((t) =>
         t.toLowerCase().includes(needle),
       );
     });
-  }, [items, q, category, avail]);
+  }, [items, q, category]);
 
   // The open product lives in the URL hash so it can be shared.
   useEffect(() => {
@@ -75,14 +72,6 @@ export function Catalog({ items, cdnUrl }: { items: CatalogItem[]; cdnUrl: strin
             ))}
           </select>
         </label>
-        <label className="select">
-          <span className="sr">Availability</span>
-          <select value={avail} onChange={(e) => setAvail(e.target.value as typeof avail)}>
-            <option value="all">All products</option>
-            <option value="in">In stock</option>
-            <option value="out">Sold out</option>
-          </select>
-        </label>
       </section>
       <p className="count" aria-live="polite">
         {shown.length} of {items.length} products
@@ -100,12 +89,11 @@ export function Catalog({ items, cdnUrl }: { items: CatalogItem[]; cdnUrl: strin
                   location.hash = p.slug;
                 }}
               >
-                <div className={`pic${p.soldOut ? ' faded' : ''}`}>
+                <div className="pic">
                   {c && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={src(c.base, 640)} alt={c.alt || p.name} loading="lazy" />
                   )}
-                  {p.soldOut && <span className="badge out">Sold out</span>}
                 </div>
                 <div className="body">
                   {p.brand && <p className="brand">{p.brand}</p>}
@@ -182,9 +170,6 @@ function Detail({ p, src, onClose }: { p: CatalogItem; src: Src; onClose: () => 
           <div className="info">
             {p.brand && <p className="brand">{p.brand}</p>}
             <h2 id="d-name">{p.name}</h2>
-            <p className="badges">
-              {p.soldOut && <span className="badge out">Sold out</span>}
-            </p>
             <p className="price">{priceText(p)}</p>
             <p className="desc">{p.description}</p>
             {p.highlights.length > 0 && (

@@ -70,7 +70,7 @@ body {
 }
 .tools {
   display: grid;
-  grid-template-columns: 1fr 220px 170px;
+  grid-template-columns: 1fr 220px;
   gap: 12px;
   margin: 24px 0 8px;
 }
@@ -342,10 +342,7 @@ dialog article {
 
 @media (max-width: 720px) {
   .tools {
-    grid-template-columns: 1fr 1fr;
-  }
-  .search {
-    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
   }
   .grid {
     grid-template-columns: repeat(2, 1fr);

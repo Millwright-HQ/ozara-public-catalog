@@ -33,7 +33,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 400 15px/1.55 Montserrat, system-ui, sans-serif;
+  font: 400 15px/1.55 var(--font-montserrat), system-ui, sans-serif;
 }
 .wrap {
   max-width: 1200px;
